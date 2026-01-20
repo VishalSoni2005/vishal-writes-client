@@ -1,15 +1,12 @@
-
-
-
-import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function AnimationWrapper({
-  children, 
+  children,
   initial = { opacity: 0 },
   animate = { opacity: 1 },
   exit = { opacity: 0 }, // Added exit animation for AnimatePresence
-  transition = { duration:  0.5},
+  transition = { duration: 0.5 },
   keyValue,
   className,
 }) {
@@ -28,4 +25,3 @@ export default function AnimationWrapper({
     </AnimatePresence>
   );
 }
-

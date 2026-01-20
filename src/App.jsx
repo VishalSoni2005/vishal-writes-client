@@ -9,9 +9,9 @@ import SearchPage from "./pages/search.page";
 import NotFound from "./pages/404.page";
 import ProfilePage from "./pages/profile.page";
 import BlogPage from "./pages/blog.page";
+import AIWritingPage from "./pages/ai-writing.page";
 
 export const UserContext = createContext({});
-//* userContext contain access_token, username, fullname, profile_img
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
   useEffect(() => {
@@ -32,6 +32,7 @@ const App = () => {
           <Route path="/search/:query" element={<SearchPage />} />
           <Route path="/user/:id" element={<ProfilePage />} />
           <Route path="/blog/:blog_id" element={<BlogPage />} />
+          <Route path="/write/ai" element={<AIWritingPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -12,6 +12,7 @@ import Checklist from "@editorjs/checklist"; // Added Checklist tool
 import Delimiter from "@editorjs/delimiter"; // Added Delimiter tool
 import Warning from "@editorjs/warning"; // Added Warning tool
 import Underline from "@editorjs/underline"; // Added Underline tool
+import axios from "axios";
 
 // Function to handle image upload by URL
 //* custom uploader function
@@ -19,13 +20,13 @@ const uploadImageByUrl = async (url) => {
   try {
     return {
       success: 1,
-      file: { url }
+      file: { url },
     };
   } catch (err) {
     console.error("Error uploading image by URL:", err);
     return {
       success: 0,
-      error: "Failed to upload image by URL"
+      error: "Failed to upload image by URL",
     };
   }
 };
@@ -36,19 +37,19 @@ const uploadImageByFile = async (file) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    const response = await axios.post("http://localhost:3000/upload", formData);
+    const response = await axios.post("http://localhost:8080/upload", formData);
     const imageUrl = response.data.url;
 
     return {
       success: 1,
-      file: { url: imageUrl }
+      file: { url: imageUrl },
     };
   } catch (err) {
     console.error("Error uploading image by file:", err);
     return {
       note: "Error uploading image by file in editor from tools.components section",
       success: 0,
-      error: "Failed to upload image by file"
+      error: "Failed to upload image by file",
     };
   }
 };
@@ -60,9 +61,9 @@ export const tools = {
     config: {
       uploader: {
         uploadByUrl: uploadImageByUrl,
-        uploadByFile: uploadImageByFile
-      }
-    }
+        uploadByFile: uploadImageByFile,
+      },
+    },
   },
 
   embed: Embed,
@@ -72,16 +73,16 @@ export const tools = {
     inlineToolbar: true,
     config: {
       placeholder: "Enter header text...",
-      levels: [1, 2, 3, 4, 5, 6] // Supports H1 to H6
-    }
+      levels: [1, 2, 3, 4, 5, 6], // Supports H1 to H6
+    },
   },
 
   list: {
     class: List,
     inlineToolbar: true,
     config: {
-      defaultStyle: "unordered"
-    }
+      defaultStyle: "unordered",
+    },
   },
 
   quote: {
@@ -89,13 +90,13 @@ export const tools = {
     inlineToolbar: true,
     config: {
       quotePlaceholder: "Enter a quote...",
-      captionPlaceholder: "Quote author"
-    }
+      captionPlaceholder: "Quote author",
+    },
   },
 
   marker: {
     class: Marker,
-    inlineToolbar: true
+    inlineToolbar: true,
   },
 
   inlineCode: InlineCode,
@@ -103,8 +104,8 @@ export const tools = {
   code: {
     class: CodeTool,
     config: {
-      placeholder: "Enter your code here..."
-    }
+      placeholder: "Enter your code here...",
+    },
   },
 
   table: {
@@ -112,21 +113,21 @@ export const tools = {
     inlineToolbar: true,
     config: {
       rows: 2, // Default number of rows
-      cols: 2 // Default number of columns
-    }
+      cols: 2, // Default number of columns
+    },
   },
 
-  //?-todo: configure link 
+  //?-todo: configure link
   link: {
     class: LinkTool,
     config: {
-      endpoint: "https://your-backend.com/fetch-url"
-    }
+      endpoint: "https://your-backend.com/fetch-url",
+    },
   },
 
   checklist: {
     class: Checklist,
-    inlineToolbar: true
+    inlineToolbar: true,
   },
 
   delimiter: Delimiter,
@@ -136,11 +137,11 @@ export const tools = {
     inlineToolbar: true,
     config: {
       titlePlaceholder: "Title",
-      messagePlaceholder: "Message"
-    }
+      messagePlaceholder: "Message",
+    },
   },
 
-  underline: Underline
+  underline: Underline,
 };
 
 // import Embed from "@editorjs/embed";

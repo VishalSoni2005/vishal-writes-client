@@ -5,7 +5,7 @@ export const uploadImage = async (img) => {
     // Step 1: Fetch the upload URL
     const {
       data: { uploadURL }
-    } = await axios.get("http://localhost:3000/get-upload-url");
+    } = await axios.get("http://localhost:8080/get-upload-url");
 
     // Step 2: Upload the image using the fetched URL
     await axios({

@@ -1,13 +1,10 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import Logo from "../imgs/logo.png";
-// import logoTwo from '../imgs/pen.svg';
-
 import logoTwo from "../imgs/blog.svg";
-
 import { UserContext } from "../App";
 import UserNavigationPanel from "./user-navigation.component";
 import defaultAvatar from "../imgs/user.png";
+import { Brain } from "lucide-react";
 
 export default function Navbar() {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
@@ -24,12 +21,12 @@ export default function Navbar() {
 
   const {
     userAuth,
-    userAuth: { access_token, profile_img }
+    userAuth: { access_token, profile_img },
   } = useContext(UserContext);
 
   const handleSearch = (e) => {
     const query = e.target.value;
-    if ( e.keyCode === 13 && query.length) {
+    if (e.keyCode === 13 && query.length) {
       console.log(query);
       navigate(`/search/${query}`);
     }
@@ -50,7 +47,8 @@ export default function Navbar() {
         <div
           className={`border-grey absolute left-0 top-full mt-0.5 w-full border-b bg-white px-[5vw] py-4 md:relative md:inset-0 md:block md:w-auto md:border-0 md:p-0 ${
             searchBoxVisibility ? "hide" : "show"
-          }`}>
+          }`}
+        >
           <input
             onKeyDown={handleSearch}
             type="text"
@@ -64,7 +62,8 @@ export default function Navbar() {
           {/* Mobile Search Button */}
           <button
             className="bg-grey flex h-12 w-12 items-center justify-center rounded-full md:hidden"
-            onClick={() => setSearchBoxVisibility((prev) => !prev)}>
+            onClick={() => setSearchBoxVisibility((prev) => !prev)}
+          >
             <i className="fi fi-rr-search text-xl"></i>
           </button>
 
@@ -72,6 +71,22 @@ export default function Navbar() {
           <Link to="/editor" className="link hidden gap-2 md:flex">
             <i className="fi fi-rr-file-edit"></i>
             <p>Write</p>
+          </Link>
+          <Link to="/write/ai" className="hidden md:block">
+            <button
+              className="
+      flex items-center gap-2
+      rounded-full border border-black/10
+      px-4 py-2
+      text-sm font-medium text-black
+      transition-all duration-200
+      hover:bg-black hover:text-white
+      hover:border-black
+    "
+            >
+              <Brain size={16} strokeWidth={1.8} />
+              <span>Write with AI</span>
+            </button>
           </Link>
 
           {/* //TODO: this point distinguish between logedin and unlogedin users */}

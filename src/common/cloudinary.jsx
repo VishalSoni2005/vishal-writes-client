@@ -7,7 +7,7 @@ export const uploadToCloudinary = async file => {
     
     formData.append("image", file); // Make sure to append the correct key
 
-    const response = await axios.post("http://localhost:3000/upload-banner-image", formData, {
+    const response = await axios.post("http://localhost:8080/upload-banner-image", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
