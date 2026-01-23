@@ -10,119 +10,67 @@ import MinimalBlogPost from "../components/nobanner-blog-post.component";
 import NaMsgData from "../components/nodata.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import LoadMoreDataBtn from "../components/load-more.component";
+import axiosInstance from "@/api/axios.instance";
+import { BLOG_CATEGORY_LIST } from "@/constants/blogCategories";
 
 export default function HomePage() {
-  let [blogs, setBlogs] = useState(null); //todo: note this blog contain blog data in format as:
-  //* blogs: {results:[],page:1,totalDocs:0}
-  let [trendingBlogs, setTrendingBlogs] = useState(null);
-  let [pageState, setPageState] = useState("home"); //* setting up the page state
-  //? this pagestate contains the category of the blog to be shown
-
-  //todo: modify this
-  let categories = [
-    "ai",
-    "tech",
-    "finance",
-    "stock",
-    "market",
-    "lic",
-    "travel",
-    "business",
-    "education",
-    "health",
-    "property",
-    "politics",
-    "manipulation",
-    "psychological",
-  ];
-
-  // const getBlogsByCategory = async ({ page = 1 }) => {
-  //   try {
-  //     const request = await axios.post("http://localhost:8080/search-blogs", {
-  //       tag: pageState,
-  //       page
-  //     });
-
-  //     const formatedData = await filterPaginationData({
-  //       state: blogs,
-  //       data: request.data.blogs,
-  //       page,
-  //       countRoute: "/search-blogs-count",
-  //       data_to_send: { tag: pageState }
-  //     });
-
-  //     setBlogs(formatedData);
-  //   } catch (err) {
-  //     console.error("Error fetching blogs by category", err);
-  //     toast.error("Error fetching blogs by category: " + pageState);
-  //   }
-  // };
+  const [blogs, setBlogs] = useState(null);
+  const [trendingBlogs, setTrendingBlogs] = useState(null);
+  const [pageState, setPageState] = useState("home");
 
   const getBlogsByCategory = async ({ page = 1 }) => {
     try {
-      const request = await axios.post("http://localhost:8080/search-blogs", {
-        category: pageState, // ✅
-        page: Number(page) || 1, // ✅
+      const res = await axiosInstance.post("/search-blogs", {
+        category: pageState,
+        page: Number(page) || 1,
       });
 
-      //* request.data.blogs is an  [ {} _ {} ]
-
-      const formatedData = await filterPaginationData({
+      const formattedData = await filterPaginationData({
         state: blogs,
-        data: request.data.blogs,
+        data: res.data.blogs,
         page,
         countRoute: "/search-blogs-count",
-        data_to_send: { category: pageState }, // ✅
+        data_to_send: { category: pageState },
       });
 
-      setBlogs(formatedData);
-    } catch (err) {
-      console.error("Error fetching blogs by category:", err);
-      // toast.error("Error fetching blogs by category: " + pageState);
+      setBlogs(formattedData);
+    } catch (error) {
+      console.error("Error fetching blogs by category:", error);
     }
   };
 
   const getLatestBlogs = async ({ page = 1 }) => {
-    // use this funciton in useEffect to get latest blogs
     try {
-      const latestBlog = await axios.post(
-        "http://localhost:8080/latest-blogs",
-        { page },
-      );
+      const res = await axiosInstance.post("/latest-blogs", { page });
 
-      const formatedData = await filterPaginationData({
+      const formattedData = await filterPaginationData({
         state: blogs,
-        data: latestBlog.data.blogs,
+        data: res.data.blogs,
         page,
         countRoute: "/all-latest-blogs-count",
       });
 
-      console.log("Formatted blogs ==>> ", formatedData);
-      setBlogs(formatedData); //! blog from backend is stored to useState form here
-    } catch (err) {
-      console.error("Error fetching latest blogs", err);
+      setBlogs(formattedData);
+    } catch (error) {
+      console.error("Error fetching latest blogs:", error);
     }
   };
 
   const getTrendingBlogs = async () => {
     try {
-      const trendingBlog = await axios.get(
-        "http://localhost:8080/trending-blogs",
-      );
-
-      const blogsArray = trendingBlog.data.blogs;
-
-      setTrendingBlogs(blogsArray); //! blog from backend is stored to useState form here
-    } catch (err) {
-      console.error("Error fetching latest blogs", err);
+      const res = await axiosInstance.get("/trending-blogs");
+      setTrendingBlogs(res.data.blogs);
+    } catch (error) {
+      console.error("Error fetching trending blogs:", error);
     }
   };
 
   const filterBlogsByCategory = (e) => {
-    let category = e.target.innerText.toLowerCase();
+    const category = e.target.innerText.toLowerCase();
 
-    setBlogs(null); //todo
-    if (pageState == category) {
+    setBlogs(null);
+
+    if (pageState === category) {
       setPageState("home");
       return;
     }
@@ -131,9 +79,9 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    activeTabRef.current.click();
+    activeTabRef.current?.click();
 
-    if (pageState == "home") {
+    if (pageState === "home") {
       getLatestBlogs({ page: 1 });
     } else {
       getBlogsByCategory({ page: 1 });
@@ -209,12 +157,12 @@ export default function HomePage() {
             <div className="">
               <h1 className="mb-8 text-xl font-medium">Your Trending Blogs</h1>
               <div className="flex flex-wrap gap-3">
-                {categories.map((category, i) => (
+                {BLOG_CATEGORY_LIST.map((category, i) => (
                   <button
                     onClick={filterBlogsByCategory}
                     className={
                       `tag ` +
-                      (pageState == category ? "bg-black text-white" : "")
+                      (pageState === category ? "bg-black text-white" : "")
                     }
                     key={i}
                   >

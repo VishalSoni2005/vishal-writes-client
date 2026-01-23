@@ -10,21 +10,28 @@ import NotFound from "./pages/404.page";
 import ProfilePage from "./pages/profile.page";
 import BlogPage from "./pages/blog.page";
 import AIWritingPage from "./pages/ai-writing.page";
+import { Toaster } from "react-hot-toast";
 
 export const UserContext = createContext({});
+
 const App = () => {
   const [userAuth, setUserAuth] = useState({});
-  useEffect(() => {
-    let userInSession = lookInSession("user"); //* this fetches jwt token and username from session as accrss token
 
-    userInSession ? setUserAuth(JSON.parse(userInSession)) : setUserAuth({ access_token: null });
+  useEffect(() => {
+    const userInSession = lookInSession("user");
+    userInSession
+      ? setUserAuth(JSON.parse(userInSession))
+      : setUserAuth({ access_token: null });
   }, []);
 
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
+      <Toaster />
+
       <Routes>
         <Route path="/editor" element={<Editor />} />
         <Route path="/editor/:blog_id" element={<Editor />} />
+
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomePage />} />
           <Route path="/signin" element={<AuthForm type="sign-in" />} />
